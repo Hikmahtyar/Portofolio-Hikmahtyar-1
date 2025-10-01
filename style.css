@@ -1,0 +1,412 @@
+/* === CSS RESET & VARIABLES === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --header-height: 4rem;
+    --font-family: 'Nunito', sans-serif;
+    
+    /* Light Theme */
+    --bg-color: #f0f2f5;
+    --primary-text-color: #1c1e21;
+    --secondary-text-color: #606770;
+    --accent-color: #1877f2;
+    --card-bg-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --bubble-color: rgba(24, 119, 242, 0.15);
+}
+
+body.dark-theme {
+    /* Dark Theme */
+    --bg-color: #0a192f;
+    --primary-text-color: #ccd6f6;
+    --secondary-text-color: #8892b0;
+    --accent-color: #64ffda;
+    --card-bg-color: #112240;
+    --shadow-color: rgba(2, 12, 27, 0.7);
+    --bubble-color: rgba(100, 255, 218, 0.1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--primary-text-color);
+    font-family: var(--font-family);
+    line-height: 1.6;
+    transition: background-color 0.4s, color 0.4s;
+    cursor: none;
+    position: relative;
+    overflow-x: hidden;
+}
+
+h1, h2, h3 { font-weight: 700; color: var(--primary-text-color); }
+a { text-decoration: none; color: var(--accent-color); }
+ul { list-style: none; }
+img { max-width: 100%; height: auto; }
+
+/* === REUSABLE CLASSES === */
+.container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+.section { padding: 6rem 0 2rem; }
+.grid { display: grid; gap: 2rem; }
+.text-center { text-align: center; }
+
+/* === ANIMASI GARIS BAWAH JUDUL === */
+.section__title {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    display: inline-block;
+}
+.section__title::before,
+.section__title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    width: 0;
+    height: 3px;
+    background-color: var(--accent-color);
+    transition: width 0.5s ease-in-out;
+}
+.section__title::before { left: 50%; }
+.section__title::after { right: 50%; }
+.section__title.animate-underline::before,
+.section__title.animate-underline::after {
+    width: 50%;
+}
+
+/* === ANIMASI BACKGROUND BUBBLES === */
+.background-bubbles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+.background-bubbles span { width: 20px; height: 20px; background-color: var(--bubble-color); border-radius: 50%; position: absolute; bottom: -180px; list-style: none; animation: animate-bubbles 15s linear infinite; }
+.background-bubbles span:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+.background-bubbles span:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+.background-bubbles span:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+.background-bubbles span:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+.background-bubbles span:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+.background-bubbles span:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+.background-bubbles span:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
+.background-bubbles span:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
+.background-bubbles span:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
+.background-bubbles span:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+@keyframes animate-bubbles { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; } }
+
+/* === ANIMASI TOMBOL INTERAKTIF === */
+.button { display: inline-block; padding: 0.75rem 2rem; border: 2px solid var(--accent-color); border-radius: 0.5rem; font-weight: 600; color: var(--accent-color); background-color: transparent; position: relative; overflow: hidden; z-index: 1; transition: color 0.4s ease-in-out; }
+.button span { position: relative; z-index: 2; }
+.button::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--accent-color); transform: translateX(-100%); transition: transform 0.4s ease-in-out; z-index: -1; }
+.button:hover::before { transform: translateX(0); }
+.button:hover { color: var(--bg-color); }
+
+/* === HEADER & NAV === */
+.header { width: 100%; position: fixed; top: 0; left: 0; z-index: 100; transition: background-color 0.4s ease, box-shadow 0.4s ease; }
+.header.scrolled {
+    background-color: rgba(10, 25, 47, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.nav { height: var(--header-height); display: flex; justify-content: space-between; align-items: center; }
+.nav__logo { font-weight: 700; font-size: 1.5rem; color: var(--primary-text-color); }
+.nav__list { display: flex; gap: 2rem; }
+.nav__link { color: var(--primary-text-color); font-weight: 600; transition: color 0.3s; }
+.nav__link:hover, .nav__link.active-link { color: var(--accent-color); }
+.nav__actions { display: flex; align-items: center; gap: 1rem; }
+.nav__toggle, .nav__close { font-size: 1.5rem; cursor: pointer; color: var(--primary-text-color); display: none; }
+#theme-toggle { font-size: 1.5rem; cursor: pointer; color: var(--primary-text-color); }
+
+/* === HOME SECTION === */
+.home__container { grid-template-columns: repeat(2, 1fr); align-items: center; min-height: calc(100vh - var(--header-height)); }
+.home__content h1 { font-size: 3.5rem; margin-bottom: 0.5rem; }
+.home__content h3 { font-size: 1.75rem; color: var(--secondary-text-color); margin-bottom: 1rem; min-height: 2.2rem; }
+.home__content p { max-width: 500px; margin-bottom: 2rem; color: var(--secondary-text-color); }
+.home__socials { display: flex; gap: 1.5rem; }
+.home__socials i { font-size: 2rem; color: var(--secondary-text-color); transition: color 0.3s, transform 0.3s; }
+.home__socials i:hover { color: var(--accent-color); transform: translateY(-5px); }
+.profile-photo-container { display: flex; justify-content: center; align-items: center; animation: float 6s ease-in-out infinite; }
+.profile-photo { width: 300px; height: 300px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent-color); box-shadow: 0 0 25px var(--accent-color), 0 0 50px var(--accent-color); }
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+
+/* === ABOUT SECTION === */
+.about__container { grid-template-columns: repeat(2, 1fr); align-items: center; }
+.about__image img { border-radius: 1rem; max-width: 350px; }
+.about__content p { color: var(--secondary-text-color); margin-bottom: 1.5rem; }
+
+/* === CERTIFICATION SECTION === */
+.certification__container {
+    max-width: 700px;
+    margin: 0 auto;
+    display: grid;
+    gap: 2rem;
+}
+.certification__card { display: flex; align-items: center; gap: 1.5rem; padding: 2rem; background-color: var(--card-bg-color); border-radius: 1rem; box-shadow: 0 8px 24px var(--shadow-color); border-left: 5px solid var(--accent-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.certification__card:hover { transform: translateY(-10px); box-shadow: 0 12px 32px var(--shadow-color); }
+.certification__icon { font-size: 4rem; color: var(--accent-color); }
+.certification__content h3 { margin-bottom: 0.5rem; }
+.certification__content p { color: var(--secondary-text-color); }
+.certification__content .button { margin-top: 1rem; display: inline-block; }
+
+/* === SKILLS SECTION - TIMELINE PERBAIKAN === */
+.skills__timeline-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.skills__timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 100%;
+    background-color: var(--accent-color);
+    border-radius: 2px;
+}
+.timeline-item {
+    position: relative;
+    width: 50%;
+    padding: 10px 40px;
+    margin-bottom: 3rem;
+    box-sizing: border-box;
+}
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    border: 4px solid var(--accent-color);
+    top: 20px;
+    z-index: 1;
+}
+.timeline-item:nth-child(even) {
+    left: 0;
+    text-align: right;
+}
+.timeline-item:nth-child(even)::after {
+    right: -14px;
+}
+.timeline-item:nth-child(odd) {
+    left: 50%;
+}
+.timeline-item:nth-child(odd)::after {
+    left: -14px;
+}
+.timeline-content {
+    padding: 1.5rem;
+    background-color: var(--card-bg-color);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    position: relative;
+}
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+.timeline-item:nth-child(odd) .timeline-content::before {
+    left: -15px;
+    border-width: 8px 15px 8px 0;
+    border-color: transparent var(--card-bg-color) transparent transparent;
+}
+.timeline-item:nth-child(even) .timeline-content::before {
+    right: -15px;
+    border-width: 8px 0 8px 15px;
+    border-color: transparent transparent transparent var(--card-bg-color);
+}
+.timeline-content h3 { margin-bottom: 0.5rem; }
+.timeline-content p { color: var(--secondary-text-color); }
+
+/* === CONTACT & FOOTER (DENGAN FLIP CARD) === */
+.contact__container { 
+    max-width: 700px;
+    height: 450px; /* Tinggi kartu agar konsisten */
+    margin: 0 auto;
+}
+
+/* Wadah utama untuk efek 3D */
+.flip-card {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    perspective: 1000px; 
+}
+
+/* Kontainer yang akan melakukan animasi flip */
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+/* Class yang ditambahkan via JS untuk memutar kartu */
+.flip-card-inner.is-flipped {
+    transform: rotateY(180deg);
+}
+
+/* Styling untuk sisi depan dan belakang */
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-shadow: 0 8px 24px var(--shadow-color);
+    background-color: var(--card-bg-color);
+    text-align: center;
+}
+
+.flip-card-front h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.flip-card-front p {
+    color: var(--secondary-text-color);
+    margin-bottom: 2rem;
+}
+
+/* Posisikan sisi belakang agar tersembunyi di awal */
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+/* Tombol close di sisi belakang */
+.flip-close-button {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-text-color);
+    transition: color 0.3s, transform 0.3s;
+}
+
+.flip-close-button:hover {
+    color: var(--accent-color);
+    transform: rotate(90deg);
+}
+
+/* Menyesuaikan form agar pas di dalam kartu */
+.contact__form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.contact__form .form__group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.contact__form input, .contact__form textarea { width: 100%; padding: 1rem; border-radius: 0.5rem; border: 2px solid var(--secondary-text-color); background-color: transparent; color: var(--primary-text-color); font-family: var(--font-family); font-size: 1rem; }
+.contact__form input::placeholder, .contact__form textarea::placeholder { color: var(--secondary-text-color); }
+.contact__form textarea { height: 120px; resize: none; margin-bottom: 2rem; }
+.contact__form .button { width: 100%; border: none; cursor: pointer; background-color: transparent; border: 2px solid var(--accent-color); }
+.contact__form .button:hover { color: var(--bg-color); }
+
+.footer { padding: 2rem 0; text-align: center; color: var(--secondary-text-color); font-size: 0.9rem; }
+
+/* === KURSOR INTERAKTIF ELEGAN === */
+.cursor-dot, .cursor-outline {
+    pointer-events: none;
+    position: fixed;
+    top: -20px;
+    left: -20px;
+    border-radius: 50%;
+    z-index: 9999;
+    opacity: 0;
+    will-change: transform;
+    transition: opacity 0.3s ease;
+}
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    mix-blend-mode: difference;
+    transition: transform 0.2s ease-in-out, opacity 0.3s ease; 
+}
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--accent-color);
+    background-color: transparent;
+}
+.cursor-outline.hover {
+    transform: scale(1.3);
+    background-color: var(--accent-color);
+    border-color: transparent;
+}
+.cursor-dot.hover {
+    transform: scale(0);
+}
+
+/* === PENYESUAIAN RESPONSIVE === */
+@media (max-width: 768px) {
+    .section { padding: 4rem 0 1rem; }
+    h1 { font-size: 2.5rem; }
+    .section__title { font-size: 2rem; }
+    .header.scrolled {
+        background-color: var(--card-bg-color);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+    .nav__menu { position: fixed; top: 0; right: -100%; width: 70%; height: 100%; background-color: var(--card-bg-color); box-shadow: -2px 0 4px var(--shadow-color); padding: 6rem 2rem 0; transition: right 0.4s; z-index: 110; }
+    .nav__menu.show-menu { right: 0; }
+    .nav__list { flex-direction: column; gap: 2.5rem; }
+    .nav__toggle { display: block; }
+    .nav__close { display: block; position: absolute; top: 1.5rem; right: 1.5rem; }
+    .home__container { padding-top: 2rem; grid-template-columns: 1fr; text-align: center; }
+    .home__content { order: 2; }
+    .home__image { order: 1; margin-bottom: 2rem; }
+    .profile-photo-container { margin-left: auto; margin-right: auto; animation: none; }
+    .profile-photo { width: 220px; height: 220px; }
+    .about__container { grid-template-columns: 1fr; text-align: center; }
+    .about__image { margin: 0 auto 2rem; }
+    .home__socials { justify-content: center; }
+    .certification__card { flex-direction: column; text-align: center; gap: 1rem; }
+    .skills__timeline-container::before {
+        left: 10px;
+        transform: none;
+    }
+    .timeline-item,
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        width: 100%;
+        left: 0;
+        padding-left: 50px;
+        padding-right: 10px;
+        text-align: left;
+    }
+    .timeline-item::after,
+    .timeline-item:nth-child(odd)::after,
+    .timeline-item:nth-child(even)::after {
+        left: -4px;
+    }
+    .timeline-item .timeline-content::before,
+    .timeline-item:nth-child(even) .timeline-content::before,
+    .timeline-item:nth-child(odd) .timeline-content::before {
+        left: -15px;
+        right: auto;
+        border-width: 8px 15px 8px 0;
+        border-color: transparent var(--card-bg-color) transparent transparent;
+    }
+    .cursor-dot, .cursor-outline {
+        display: none;
+    }
+    body {
+        cursor: auto;
+    }
+}
